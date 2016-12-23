@@ -1,16 +1,22 @@
 <?php
 //The main mission of this class is solving all the results (object) that retrieved from database.
- class Collection
+ class Collection implements Countable, IteratorAggregate
  {
+
    protected $items;
-   public function __construct(array $items = [])
+   public function getIterator() {
+      return new ArrayIterator($this->items);
+    }
+   public function __construct($items = [])
    {
-     $this->items = (array) $items;
+
+     $this->items = is_array($items) ? $items : $this->getArrayableItems($items);
    }
    public function __toString()
    {
      return $this->toJson();
    }
+
    public function all()
    {
      return $this->items;
@@ -61,9 +67,17 @@
    {
      return json_encode($this->items);
    }
-   public function merge(array $item)
+   public function merge($items)
    {
-     return new static(array_merge($this->items, $item));
+       return new static(array_merge($this->items, $this->getArrayableItems($items)));
    }
+   protected function getArrayableItems($items)
+   {
+     if ($items instanceof Collection) {
+       return $items->all();
+     }
+     return $items;
+   }
+
 
  }

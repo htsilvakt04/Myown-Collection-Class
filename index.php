@@ -11,8 +11,8 @@ $b = $db->query("SELECT * FROM articles");
 $b = $b->fetchAll(PDO::FETCH_OBJ);
 
 $articles = new Collection($a);
+$moreArticles = new Collection($b);
 
-// foreach($articles->all() as $article) {
-//   echo $article->title;
-// }
-echo $articles->merge($b);
+$articles = $articles->merge($moreArticles);
+
+var_dump($articles);
