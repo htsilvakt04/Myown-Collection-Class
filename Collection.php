@@ -3,9 +3,13 @@
  class Collection
  {
    protected $items;
-   public function __construct($items = [])
+   public function __construct(array $items = [])
    {
      $this->items = (array) $items;
+   }
+   public function __toString()
+   {
+     return $this->toJson();
    }
    public function all()
    {
@@ -52,6 +56,14 @@
      $keys = $this->keys()->all();
      $items = array_map($callback, $this->items, $keys);
      return new static (array_combine($keys,$items));
+   }
+   public function toJson()
+   {
+     return json_encode($this->items);
+   }
+   public function merge(array $item)
+   {
+     return new static(array_merge($this->items, $item));
    }
 
  }
